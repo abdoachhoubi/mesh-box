@@ -2,8 +2,6 @@
 
 A modern, interactive tool for creating beautiful mesh gradients with Next.js and Canvas API.
 
-![Mesh Gradient Generator](https://placeholder.svg?height=400&width=800)
-
 ## Features
 
 - **Interactive Canvas**: Create and manipulate mesh points with real-time updates
