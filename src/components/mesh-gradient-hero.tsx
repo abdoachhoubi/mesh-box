@@ -51,8 +51,8 @@ export default function MeshGradientHero({ interactive = false }: MeshGradientHe
     if (!interactive) {
       const animate = (time: number) => {
         if (!lastTimeRef.current) lastTimeRef.current = time
-        const deltaTime = time - lastTimeRef.current
-        lastTimeRef.current = time
+        // const deltaTime = time - lastTimeRef.current
+        // lastTimeRef.current = time
 
         setMeshPoints((prevPoints) =>
           prevPoints.map((point) => {

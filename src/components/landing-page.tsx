@@ -142,7 +142,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-bold">Add Mesh Points</h3>
               <p className="text-muted-foreground text-center">
-                Click the "Add Mesh Point" button to create points on your canvas.
+                Click the &quot;Add Mesh Point&quot; button to create points on your canvas.
               </p>
             </div>
             <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-6 shadow-sm">
