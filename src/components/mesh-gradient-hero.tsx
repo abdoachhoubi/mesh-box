@@ -10,6 +10,8 @@ interface MeshPoint {
   y: number
   color: string
   radius: number
+  blur: number
+  opacity: number
 }
 
 interface MeshGradientHeroProps {
@@ -23,22 +25,28 @@ export default function MeshGradientHero({ interactive = false }: MeshGradientHe
       id: "point-1",
       x: 150,
       y: 100,
-      color: "#FF5E5B",
-      radius: 200,
+      color: "#6b46c1", // Deep purple
+      radius: 300,
+      blur: 0.4,
+      opacity: 0.9,
     },
     {
       id: "point-2",
       x: 400,
       y: 150,
-      color: "#39A0ED",
+      color: "#9f7aea", // Medium purple
       radius: 250,
+      blur: 0.5,
+      opacity: 0.8,
     },
     {
       id: "point-3",
       x: 250,
       y: 300,
-      color: "#8A4FFF",
-      radius: 200,
+      color: "#000000", // Black
+      radius: 350,
+      blur: 0.6,
+      opacity: 0.9,
     },
   ])
   const [selectedPoint, setSelectedPoint] = useState<string | null>(null)
@@ -51,8 +59,8 @@ export default function MeshGradientHero({ interactive = false }: MeshGradientHe
     if (!interactive) {
       const animate = (time: number) => {
         if (!lastTimeRef.current) lastTimeRef.current = time
-        // const deltaTime = time - lastTimeRef.current
-        // lastTimeRef.current = time
+        const deltaTime = time - lastTimeRef.current
+        lastTimeRef.current = time
 
         setMeshPoints((prevPoints) =>
           prevPoints.map((point) => {
@@ -138,6 +146,56 @@ export default function MeshGradientHero({ interactive = false }: MeshGradientHe
     setIsDragging(false)
   }
 
+  // Apply Gaussian blur to a canvas
+  const applyGaussianBlur = (canvas: HTMLCanvasElement, radius: number) => {
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+
+    // Create a temporary canvas
+    const tempCanvas = document.createElement("canvas")
+    tempCanvas.width = canvas.width
+    tempCanvas.height = canvas.height
+    const tempCtx = tempCanvas.getContext("2d")
+    if (!tempCtx) return
+
+    // Copy the original canvas to the temporary canvas
+    tempCtx.drawImage(canvas, 0, 0)
+
+    // Apply horizontal blur
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.save()
+    ctx.filter = `blur(${radius}px)`
+    ctx.drawImage(tempCanvas, 0, 0)
+    ctx.restore()
+
+    // Clean up
+    tempCanvas.remove()
+  }
+
+  // Helper function to convert hex to rgba
+  const hexToRgba = (hex: string, opacity: number): string => {
+    try {
+      hex = hex.replace("#", "")
+
+      // Handle shorthand hex
+      if (hex.length === 3) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
+      }
+
+      const r = Number.parseInt(hex.substring(0, 2), 16)
+      const g = Number.parseInt(hex.substring(2, 4), 16)
+      const b = Number.parseInt(hex.substring(4, 6), 16)
+
+      if (isNaN(r) || isNaN(g) || isNaN(b)) {
+        return `rgba(107, 70, 193, ${opacity})`
+      }
+
+      return `rgba(${r}, ${g}, ${b}, ${opacity})`
+    } catch (error) {
+      return `rgba(107, 70, 193, ${opacity})`
+    }
+  }
+
   // Render the mesh gradient
   useEffect(() => {
     const canvas = canvasRef.current
@@ -162,72 +220,72 @@ export default function MeshGradientHero({ interactive = false }: MeshGradientHe
       // Set the canvas internal dimensions
       canvas.width = containerWidth * 2 // Higher resolution for better quality
       canvas.height = containerHeight * 2
+
+      // Redraw everything when canvas size changes
+      drawCanvas()
+    }
+
+    // Function to draw the canvas content
+    const drawCanvas = () => {
+      // Clear canvas with background color
+      ctx.fillStyle = "#000000"
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+      // Draw each mesh point as a radial gradient
+      meshPoints.forEach((point) => {
+        const scaledX = point.x * 2
+        const scaledY = point.y * 2
+        const scaledRadius = point.radius * 2
+
+        const gradient = ctx.createRadialGradient(scaledX, scaledY, 0, scaledX, scaledY, scaledRadius)
+
+        // Create color with opacity
+        const rgbaColor = hexToRgba(point.color, point.opacity)
+
+        gradient.addColorStop(0, rgbaColor)
+        gradient.addColorStop(1, "rgba(0,0,0,0)")
+
+        // Fill with gradient
+        ctx.save()
+        ctx.fillStyle = gradient
+        ctx.globalCompositeOperation = "lighter"
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+        ctx.restore()
+      })
+
+      // Draw selection indicator for selected point if interactive
+      if (interactive && selectedPoint) {
+        const point = meshPoints.find((p) => p.id === selectedPoint)
+        if (point) {
+          ctx.beginPath()
+          ctx.arc(point.x * 2, point.y * 2, 30, 0, Math.PI * 2)
+          ctx.strokeStyle = "white"
+          ctx.lineWidth = 4
+          ctx.stroke()
+
+          ctx.beginPath()
+          ctx.arc(point.x * 2, point.y * 2, 24, 0, Math.PI * 2)
+          ctx.strokeStyle = "black"
+          ctx.lineWidth = 2
+          ctx.stroke()
+        }
+      }
     }
 
     // Initial resize
     resizeCanvas()
 
     // Set up resize observer
-    const resizeObserver = new ResizeObserver(resizeCanvas)
+    const resizeObserver = new ResizeObserver(() => {
+      resizeCanvas()
+    })
+
     if (canvas.parentElement) {
       resizeObserver.observe(canvas.parentElement)
     }
 
-    // Clear canvas with background color
-    ctx.fillStyle = "#ffffff"
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-    // Create a temporary canvas for blending
-    const tempCanvas = document.createElement("canvas")
-    tempCanvas.width = canvas.width
-    tempCanvas.height = canvas.height
-    const tempCtx = tempCanvas.getContext("2d")
-    if (!tempCtx) return
-
-    // Draw each mesh point as a radial gradient
-    meshPoints.forEach((point) => {
-      tempCtx.save()
-
-      // Create radial gradient
-      const gradient = tempCtx.createRadialGradient(
-        point.x * 2,
-        point.y * 2,
-        0,
-        point.x * 2,
-        point.y * 2,
-        point.radius * 2,
-      )
-
-      gradient.addColorStop(0, point.color)
-      gradient.addColorStop(1, "transparent")
-
-      tempCtx.fillStyle = gradient
-      tempCtx.globalCompositeOperation = "source-over"
-      tempCtx.fillRect(0, 0, canvas.width, canvas.height)
-
-      tempCtx.restore()
-    })
-
-    // Draw the temporary canvas onto the main canvas
-    ctx.drawImage(tempCanvas, 0, 0)
-
-    // Draw selection indicator for selected point if interactive
-    if (interactive && selectedPoint) {
-      const point = meshPoints.find((p) => p.id === selectedPoint)
-      if (point) {
-        ctx.beginPath()
-        ctx.arc(point.x * 2, point.y * 2, 30, 0, Math.PI * 2)
-        ctx.strokeStyle = "white"
-        ctx.lineWidth = 4
-        ctx.stroke()
-
-        ctx.beginPath()
-        ctx.arc(point.x * 2, point.y * 2, 24, 0, Math.PI * 2)
-        ctx.strokeStyle = "black"
-        ctx.lineWidth = 2
-        ctx.stroke()
-      }
-    }
+    // Draw the canvas initially
+    drawCanvas()
 
     // Cleanup
     return () => {

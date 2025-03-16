@@ -11,9 +11,9 @@ export default function LandingPage() {
   const [showFullGenerator, setShowFullGenerator] = useState(false)
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen w-full items-center">
       {/* Navigation */}
-      <header className="border-b">
+      <header className="container border-b">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           <div className="flex items-center gap-2">
             <Layers className="h-6 w-6" />
@@ -47,7 +47,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-12 md:py-24 lg:py-32 bg-gradient-to-b from-background to-muted/30">
+      <section className="container py-12 md:py-24 lg:py-32 bg-gradient-to-b from-background to-muted/30">
         <div className="container px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-[1fr_600px] lg:gap-12 xl:grid-cols-[1fr_800px]">
             <div className="flex flex-col justify-center space-y-4">
@@ -78,7 +78,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-12 md:py-24 lg:py-32">
+      <section id="features" className="container py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
@@ -125,7 +125,7 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-12 md:py-24 lg:py-32 bg-muted/50">
+      <section id="how-it-works" className="container py-12 md:py-24 lg:py-32 bg-muted/50">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
@@ -168,7 +168,7 @@ export default function LandingPage() {
       </section>
 
       {/* Generator Section */}
-      <section id="generator" className="py-12 md:py-24 lg:py-32">
+      <section id="generator" className="container py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
@@ -198,7 +198,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 md:py-24 lg:py-32 bg-primary text-primary-foreground">
+      <section className="container py-12 md:py-24 lg:py-32 bg-primary text-primary-foreground">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
@@ -221,7 +221,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-6 md:py-0">
+      <footer className="container border-t py-6 md:py-0">
         <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
           <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
             © 2023 MeshBox. All rights reserved.
