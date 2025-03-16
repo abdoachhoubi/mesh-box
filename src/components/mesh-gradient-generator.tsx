@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -78,42 +78,41 @@ export default function MeshGradientGenerator() {
   }
 
   // Add example gradient
-  const addExampleGradient = () => {
-    // Get current canvas size
-    const width = canvasSize.width
-    const height = canvasSize.height
-
-    setBgColor("#000000")
-    setMeshPoints([
-      {
-        id: "point-1",
-        x: width * 0.7,
-        y: height * 0.8,
-        color: "#6b46c1", // Deep purple
-        radius: width * 0.6,
-        blur: 0.4,
-        opacity: 0.9,
-      },
-      {
-        id: "point-2",
-        x: width * 0.3,
-        y: height * 0.9,
-        color: "#9f7aea", // Medium purple
-        radius: width * 0.5,
-        blur: 0.5,
-        opacity: 0.8,
-      },
-      {
-        id: "point-3",
-        x: width * 0.5,
-        y: height * 0.2,
-        color: "#000000", // Black
-        radius: width * 0.7,
-        blur: 0.6,
-        opacity: 0.9,
-      },
-    ])
-  }
+  const addExampleGradient = useCallback(() => {
+	const width = canvasSize.width;
+	const height = canvasSize.height;
+  
+	setBgColor("#000000");
+	setMeshPoints([
+	  {
+		id: "point-1",
+		x: width * 0.7,
+		y: height * 0.8,
+		color: "#6b46c1",
+		radius: width * 0.6,
+		blur: 0.4,
+		opacity: 0.9,
+	  },
+	  {
+		id: "point-2",
+		x: width * 0.3,
+		y: height * 0.9,
+		color: "#9f7aea",
+		radius: width * 0.5,
+		blur: 0.5,
+		opacity: 0.8,
+	  },
+	  {
+		id: "point-3",
+		x: width * 0.5,
+		y: height * 0.2,
+		color: "#000000",
+		radius: width * 0.7,
+		blur: 0.6,
+		opacity: 0.9,
+	  },
+	]);
+  }, [canvasSize]);
 
   // Handle canvas mouse down for selecting or creating points
   const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -243,9 +242,9 @@ export default function MeshGradientGenerator() {
   // Initialize with default points
   useEffect(() => {
     if (meshPoints.length === 0) {
-      addExampleGradient()
+      addExampleGradient();
     }
-  }, [])
+  }, [meshPoints.length, addExampleGradient])
 
   // Render the mesh gradient
   useEffect(() => {
@@ -367,6 +366,7 @@ export default function MeshGradientGenerator() {
 
       return `rgba(${r}, ${g}, ${b}, ${opacity})`
     } catch (error) {
+		console.log(error);
       return `rgba(107, 70, 193, ${opacity})`
     }
   }
@@ -517,7 +517,7 @@ export default function MeshGradientGenerator() {
         }
 
         // Ensure each point has all required properties
-        const pointsWithDefaults = json.points.map((point: any) => ({
+        const pointsWithDefaults = json.points.map((point: MeshPoint) => ({
           id: point.id || `point-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           x: point.x,
           y: point.y,
@@ -537,6 +537,7 @@ export default function MeshGradientGenerator() {
         toast.error("Import Failed", {
           description: "Failed to parse the imported file",
         })
+		return error
       }
 
       // Reset the input
@@ -547,7 +548,7 @@ export default function MeshGradientGenerator() {
   }
 
   // Validate imported JSON
-  const validateImportedJson = (json: any): json is MeshGradientData => {
+  const validateImportedJson = (json: MeshGradientData) => {
     // Check layout
     if (
       !json.layout ||

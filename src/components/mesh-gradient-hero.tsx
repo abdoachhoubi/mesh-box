@@ -59,8 +59,8 @@ export default function MeshGradientHero({ interactive = false }: MeshGradientHe
     if (!interactive) {
       const animate = (time: number) => {
         if (!lastTimeRef.current) lastTimeRef.current = time
-        const deltaTime = time - lastTimeRef.current
-        lastTimeRef.current = time
+        // const deltaTime = time - lastTimeRef.current
+        // lastTimeRef.current = time
 
         setMeshPoints((prevPoints) =>
           prevPoints.map((point) => {
@@ -147,30 +147,30 @@ export default function MeshGradientHero({ interactive = false }: MeshGradientHe
   }
 
   // Apply Gaussian blur to a canvas
-  const applyGaussianBlur = (canvas: HTMLCanvasElement, radius: number) => {
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+//   const applyGaussianBlur = (canvas: HTMLCanvasElement, radius: number) => {
+//     const ctx = canvas.getContext("2d")
+//     if (!ctx) return
 
-    // Create a temporary canvas
-    const tempCanvas = document.createElement("canvas")
-    tempCanvas.width = canvas.width
-    tempCanvas.height = canvas.height
-    const tempCtx = tempCanvas.getContext("2d")
-    if (!tempCtx) return
+//     // Create a temporary canvas
+//     const tempCanvas = document.createElement("canvas")
+//     tempCanvas.width = canvas.width
+//     tempCanvas.height = canvas.height
+//     const tempCtx = tempCanvas.getContext("2d")
+//     if (!tempCtx) return
 
-    // Copy the original canvas to the temporary canvas
-    tempCtx.drawImage(canvas, 0, 0)
+//     // Copy the original canvas to the temporary canvas
+//     tempCtx.drawImage(canvas, 0, 0)
 
-    // Apply horizontal blur
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    ctx.save()
-    ctx.filter = `blur(${radius}px)`
-    ctx.drawImage(tempCanvas, 0, 0)
-    ctx.restore()
+//     // Apply horizontal blur
+//     ctx.clearRect(0, 0, canvas.width, canvas.height)
+//     ctx.save()
+//     ctx.filter = `blur(${radius}px)`
+//     ctx.drawImage(tempCanvas, 0, 0)
+//     ctx.restore()
 
-    // Clean up
-    tempCanvas.remove()
-  }
+//     // Clean up
+//     tempCanvas.remove()
+//   }
 
   // Helper function to convert hex to rgba
   const hexToRgba = (hex: string, opacity: number): string => {
@@ -192,6 +192,8 @@ export default function MeshGradientHero({ interactive = false }: MeshGradientHe
 
       return `rgba(${r}, ${g}, ${b}, ${opacity})`
     } catch (error) {
+		console.log(error);
+		
       return `rgba(107, 70, 193, ${opacity})`
     }
   }
