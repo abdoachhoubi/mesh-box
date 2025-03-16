@@ -14,7 +14,7 @@ export default function LandingPage() {
     <div className="flex flex-col min-h-screen w-full items-center">
       {/* Navigation */}
       <header className="container border-b">
-        <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+        <div className="flex h-16 items-center justify-between px-4 md:px-6">
           <div className="flex items-center gap-2">
             <Layers className="h-6 w-6" />
             <span className="text-xl font-bold">MeshBox</span>
@@ -48,7 +48,7 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="container py-12 md:py-24 lg:py-32 bg-gradient-to-b from-background to-muted/30">
-        <div className="container px-4 md:px-6">
+        <div className="px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-[1fr_600px] lg:gap-12 xl:grid-cols-[1fr_800px]">
             <div className="flex flex-col justify-center space-y-4">
               <div className="space-y-2">
@@ -70,7 +70,7 @@ export default function LandingPage() {
                 </Button>
               </div>
             </div>
-            <div className="mx-auto aspect-video overflow-hidden rounded-xl border bg-background object-cover shadow-xl">
+            <div className="ml-auto w-full aspect-video overflow-hidden rounded-xl border bg-background object-cover shadow-xl">
               <MeshGradientHero />
             </div>
           </div>
