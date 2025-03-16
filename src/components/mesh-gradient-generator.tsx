@@ -303,7 +303,13 @@ export default function MeshGradientGenerator() {
         setBgColor(json.layout.backgroundColor)
 
         // Ensure each point has an ID
-        const pointsWithIds = json.points.map((point: any) => ({
+        const pointsWithIds = json.points.map((point: {
+			id: string;
+			x: number;
+			y: number;
+			color: string;
+			radius: number;
+		}) => ({
           ...point,
           id: point.id || `point-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         }))
@@ -318,6 +324,7 @@ export default function MeshGradientGenerator() {
         toast.error("Import Failed", {
           description: "Failed to parse the imported file",
         })
+		return error;
       }
 
       // Reset the input
@@ -328,7 +335,9 @@ export default function MeshGradientGenerator() {
   }
 
   // Validate imported JSON
-  const validateImportedJson = (json: any): json is MeshGradientData => {
+  const validateImportedJson = (json: 
+	MeshGradientData
+  ): json is MeshGradientData => {
     // Check layout
     if (
       !json.layout ||
