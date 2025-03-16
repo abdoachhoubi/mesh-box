@@ -79,7 +79,7 @@ export default function MeshGradientGenerator() {
     const clickedPoint = meshPoints.find((point) => {
       const dx = point.x - x
       const dy = point.y - y
-      return Math.sqrt(dx * dx + dy * dy) < 50 // 15px selection radius
+      return Math.sqrt(dx * dx + dy * dy) < 100 // 15px selection radius
     })
 
     if (clickedPoint) {

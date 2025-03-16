@@ -1,5 +1,11 @@
-import MeshGradientGenerator from "@/components/mesh-gradient-generator";
+import LandingPage from "@/components/landing-page";
+import { Toaster } from "sonner";
 
 export default function Home() {
-  return <MeshGradientGenerator />;
+  return (
+    <main className="flex flex-col items-center">
+      <LandingPage />
+      <Toaster />
+    </main>
+  );
 }
